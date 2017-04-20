@@ -11,7 +11,9 @@
 - Go the the project directory and run : ```
       npm install
       ``` 
-- Use a server like [http-server](https://www.npmjs.com/package/http-server) to launch the application.
+- Run ```
+      ng serve
+      ```  to launch the application.
 
 ## Contributors
 
