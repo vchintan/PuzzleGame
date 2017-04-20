@@ -1,0 +1,108 @@
+.game-container {
+  margin: 0px auto;
+  position: relative;
+  padding: 10px 15px;
+  background: #BBADA0;
+  border-radius: 6px;
+  border-left: 5px solid #BBADA0;
+  border-right: 5px solid #BBADA0;
+}
+
+.tile-col {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.tile {
+  margin-bottom: 10px;
+  padding-top: calc(50% - 36px);
+  padding-bottom: calc(50% - 36px);
+  font-size: 300%;
+  font-weight: bold;
+  background: #CDC1B4;
+  color: #776e65;
+  border-radius: 3px;
+  box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+  -webkit-animation: appear 100ms ease 50ms;
+  -moz-animation: appear 100ms ease 50ms;
+  animation: appear 100ms ease 50ms;
+  -webkit-animation-fill-mode: backwards;
+  -moz-animation-fill-mode: backwards;
+  animation-fill-mode: backwards;
+  cursor: pointer;
+  /*Set our animation play state to paused initially */
+  /*animation-play-state: paused;*/
+}
+
+.tile:hover {
+  background: #ede0c8;
+  box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+  transition: background;
+}
+
+.tile.blank-tile {
+  background: #BBADA0;
+}
+
+.tile.blank-tile:hover {
+  background: #BBADA0;
+  cursor: default;
+}
+
+.last-row .tile {
+  margin-bottom: 0px;
+}
+
+@-webkit-keyframes appear {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+@-moz-keyframes appear {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+}

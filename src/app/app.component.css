@@ -1,0 +1,19 @@
+.steps-row {
+  margin-top: 20px;
+}
+.steps-row .card {
+  background: #eee4da;
+  box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+  border: 1px solid #BBADA0;
+  margin-bottom: 10px;
+}
+.element-row {
+  margin: 0px;
+  margin-bottom: 0px;
+}
+.element {
+  margin-right: 5px;
+}
+.card-header {
+  background: #cdc1b4;
+}

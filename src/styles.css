@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+
+body {
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  background: #faf8ef;
+  color: #776e65;
+}
+a{
+  /*color: #776e65;*/
+}
+.loading {
+  width: 100px;
+  height: 100px;
+  margin: 0px auto;
+  background: url('images/loading_squares.svg');
+  background-size: contain;
+  background-position: center;
+}
+
+.btn.btn-custom1 {
+  background: #8f7a66;
+  color: #f9f6f2;
+  cursor: pointer;
+}

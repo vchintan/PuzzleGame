@@ -1,0 +1,33 @@
+<div class="puzzle-description collapse" id="puzzleDescription" aria-expanded="false">
+  <div class="container">
+    <p>This application finds the optimal solution to solve a 8 or
+      15-puzzle. By optimal solution, we mean a solution requiring the
+      minimum numbers of moves.</p>
+
+    <p>
+      Different algorithms are implemented : <a href="http://en.wikipedia.org/wiki/Breadth-first_search">Breadth
+      First Search</a>, <a href="http://en.wikipedia.org/wiki/A_star">A*</a>
+      or <a href="http://www.google.be/search?q=Iterative+deepening+A*">Iterative
+      Deepening A* (IDA*)</a>. You can use and compare these algorithms only
+      for the 8-puzzle. Indeed, only IDA* are able to resolve a 15-puzzle
+      relatively fast and without consuming too much memory.
+    </p>
+
+    <p>A* and IDA* algorithms use heuristic function to find the
+      optimal solution. Three heuristic functions are proposed : Manhattan
+      Distance, Linear Conflict and Database Pattern.</p>
+
+    <p>This web application is deployed on Google App Engine infrastructure (Frontend Instance Class F2 : 1200MHz,
+      256 MB). The algorithm has 60 seconds to solve the puzzle.</p>
+
+    <p>
+      The code is open-sourced and can be found <a
+      href="http://code.google.com/p/julien-labs/source/browse/#svn%2Ftrunk%2FSlidingPuzzle%2Fsrc%2Fbe%2Fdramaix%2Fai%2Fslidingpuzzle%2Fclient">here</a>
+    </p>
+
+    <p>
+      If you want to have more details about how I've implemented this web application, please read the <a
+      href="https://plus.google.com/u/0/103916508880440628637/posts/4vLG9oghrLy">following post</a>
+    </p>
+  </div>
+</div>

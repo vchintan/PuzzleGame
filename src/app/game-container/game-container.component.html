@@ -1,0 +1,12 @@
+<div class="game-container">
+  <div class="row" *ngFor="let row of puzzle.elements; let i = index;" [class.last-row]="(i == (puzzle.size-1))">
+    <div [class.col-3]="((puzzle.size) == 4)" [class.col-4]="((puzzle.size) == 3)" class="tile-col text-center"
+         *ngFor="let element of row; let j = index;" (click)="swapWithBlankElement(i,j)">
+      <div *ngIf="!((puzzle.blankElementIndex.row == i) && (puzzle.blankElementIndex.col == j))" class="tile">
+        {{element}}
+      </div>
+      <div *ngIf="((puzzle.blankElementIndex.row == i) && (puzzle.blankElementIndex.col == j))" class="tile blank-tile"
+           [class.blank-tile]="((puzzle.blankElementIndex.row == i) && (puzzle.blankElementIndex.col == j))"></div>
+    </div>
+  </div>
+</div>
