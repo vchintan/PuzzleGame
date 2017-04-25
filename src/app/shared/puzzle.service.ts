@@ -315,9 +315,6 @@ export class PuzzleService {
           h: leastCostNode.h,
           cost: leastCostNode.cost,
           timeTaken: result.timeTaken
-          // successors: successors,
-          // openList: JSON.parse(JSON.stringify(nodesList)),
-          // leastCostNodeIndex: leastCostNodeIndex
         });
         break;
       }

@@ -5,9 +5,7 @@ body {
   background: #faf8ef;
   color: #776e65;
 }
-a{
-  /*color: #776e65;*/
-}
+
 .loading {
   width: 100px;
   height: 100px;
@@ -25,6 +23,7 @@ a{
   margin-bottom: 10px;
   border: 1px solid #7b6857;
 }
+
 .btn.btn-custom1.disabled {
   cursor: not-allowed;
 }
