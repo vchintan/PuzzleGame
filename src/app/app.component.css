@@ -1,7 +1,8 @@
-.steps-row {
+.m-v-20 {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
-.steps-row .card {
+.card {
   background: #eee4da;
   box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
   border: 1px solid #BBADA0;
@@ -16,4 +17,12 @@
 }
 .card-header {
   background: #cdc1b4;
+}
+.solving-loader {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.solving-loader .progress {
+  max-width: 400px;
+  margin: 0px auto;
 }

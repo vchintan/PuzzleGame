@@ -21,4 +21,15 @@ a{
   background: #8f7a66;
   color: #f9f6f2;
   cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #7b6857;
+}
+.btn.btn-custom1.disabled {
+  cursor: not-allowed;
+}
+
+.btn.btn-custom1:hover {
+  background: #bd9066;
+  border: .1px solid #ad8057;
 }

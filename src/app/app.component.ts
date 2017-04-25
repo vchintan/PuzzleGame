@@ -1,4 +1,4 @@
-import {Component, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, ViewChild, AfterViewInit, OnInit} from '@angular/core';
 import {AppConstants} from "./shared/AppConstants";
 import {GameContainerComponent} from "./game-container/game-container.component";
 
@@ -7,31 +7,41 @@ import {GameContainerComponent} from "./game-container/game-container.component"
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit{
+export class AppComponent {
 
-  @ViewChild(GameContainerComponent) private gameComponent: GameContainerComponent;
+  @ViewChild(GameContainerComponent) public gameComponent: GameContainerComponent;
 
   public size: number = AppConstants.defaultPuzzleSize;
   public algorithmOptions: string[] = [];
   public heuristicOptions: string[] = [];
   public selectedAlgorithmOption: string = "";
   public selectedHeuristicOption: string = "";
-  public showFeedback: boolean = false;
-  public feedMsg: string = "";
-  public solution = [];
+  public showHint: boolean = false;
+  public showSteps: boolean = false;
+  public showError: boolean = false;
+  public showInfo: boolean = false;
+  public showGameControls: boolean = true;
+  public infoMsg: string = "";
+  public errMsg: string = "";
+
 
   constructor() {
     this.refreshAlgorithmOptions();
   }
 
-  ngAfterViewInit() {
-    this.solution = this.gameComponent.solution;
+  updatePuzzle() {
+    this.cleanPuzzleCalculations();
+    this.gameComponent.refreshPuzzle();
   }
 
-  updatePuzzle() {
-    this.gameComponent.refreshPuzzle();
-    this.solution = this.gameComponent.solution;
-    console.log("Solution: "+JSON.stringify(this.solution));
+  cleanPuzzleCalculations() {
+    this.showSteps = false;
+    this.showHint = false;
+    this.showInfo = false;
+    this.showError = false;
+    this.showGameControls = true;
+    this.infoMsg = "";
+    this.errMsg = "";
   }
 
   refreshAlgorithmOptions() {
@@ -57,9 +67,56 @@ export class AppComponent implements AfterViewInit{
       case AppConstants.algorithmIDA:
         this.heuristicOptions = AppConstants.heuristicOptionsIDA;
         break;
-      default: this.heuristicOptions = AppConstants.heuristicOptionsNone;
+      default:
+        this.heuristicOptions = AppConstants.heuristicOptionsNone;
     }
-    if(this.heuristicOptions.length == 0) this.heuristicOptions = AppConstants.heuristicOptionsNone;
+    if (this.heuristicOptions.length == 0) this.heuristicOptions = AppConstants.heuristicOptionsNone;
     this.selectedHeuristicOption = this.heuristicOptions[0];
+  }
+
+  solvePuzzle() {
+    this.gameComponent.solvePuzzle();
+  }
+
+  onShowSteps() {
+    this.cleanPuzzleCalculations();
+    this.solvePuzzle();
+    this.showSteps = true;
+  }
+
+  onShowHint() {
+    this.cleanPuzzleCalculations();
+    this.solvePuzzle();
+    this.showHint = true;
+  }
+
+  onPlaySteps() {
+    this.cleanPuzzleCalculations();
+    this.solvePuzzle();
+    this.gameComponent.playSteps();
+  }
+  onUserPlaying() {
+    this.cleanPuzzleCalculations();
+  }
+  pausePuzzlePlay(){
+    this.cleanPuzzleCalculations();
+    this.gameComponent.cleanPuzzleCalculations();
+  }
+
+  onShowError(message) {
+    this.showInfo = false;
+    this.infoMsg = "";
+    this.errMsg = message;
+    this.showError = true;
+  }
+  onShowInfo(message) {
+    this.showError = false;
+    this.errMsg = "";
+    this.infoMsg = message;
+    this.showInfo = true;
+    this.showGameControls = false;
+  }
+  onPuzzlePlaying() {
+    this.showGameControls = false;
   }
 }

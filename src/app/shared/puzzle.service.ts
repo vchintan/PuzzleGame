@@ -47,7 +47,7 @@ export class PuzzleService {
       }
     }
     blankElementIndex.row = blankElementIndex.col = size - 1;
-    elements[blankElementIndex.row][blankElementIndex.col] = -1;
+    elements[blankElementIndex.row][blankElementIndex.col] = 0;
 
     k = (size * size);
     for (var i = 0; i < size; ++i) {
@@ -82,11 +82,9 @@ export class PuzzleService {
     let md: number = 0;
 
     if (puzzle) {
-      // console.log("Puzzle : " + JSON.stringify(puzzle));
       for (var i = 0; i < puzzle.elements.length; ++i) {
         for (var j = 0; j < puzzle.elements[i].length; ++j) {
           if (!(i == puzzle.blankElementIndex.row && j == puzzle.blankElementIndex.col)) {
-            // console.log("(i = " + i + ") (j = " + j + ")  Element : " + puzzle.elements[i][j]);
             md += Math.abs(i - puzzle.goalPositions[puzzle.elements[i][j]].row) + Math.abs(j - puzzle.goalPositions[puzzle.elements[i][j]].col);
           }
         }
@@ -106,6 +104,7 @@ export class PuzzleService {
       return null;
     }
     var g = node.g + 1, h = this.mahnattanDistance(upPuzzle), upNode = {
+      move: "Move Up (" + upPuzzle.blankElementIndex.row + "," + upPuzzle.blankElementIndex.col + ")",
       puzzle: upPuzzle,
       parent: node,
       g: g,
@@ -126,6 +125,7 @@ export class PuzzleService {
       return null;
     }
     var g = node.g + 1, h = this.mahnattanDistance(upPuzzle), upNode = {
+      move: "Move Down (" + upPuzzle.blankElementIndex.row + "," + upPuzzle.blankElementIndex.col + ")",
       puzzle: upPuzzle,
       parent: node,
       g: g,
@@ -146,6 +146,7 @@ export class PuzzleService {
       return null;
     }
     var g = node.g + 1, h = this.mahnattanDistance(upPuzzle), upNode = {
+      move: "Move Left (" + upPuzzle.blankElementIndex.row + "," + upPuzzle.blankElementIndex.col + ")",
       puzzle: upPuzzle,
       parent: node,
       g: g,
@@ -166,6 +167,7 @@ export class PuzzleService {
       return null;
     }
     var g = node.g + 1, h = this.mahnattanDistance(upPuzzle), upNode = {
+      move: "Move Right (" + upPuzzle.blankElementIndex.row + "," + upPuzzle.blankElementIndex.col + ")",
       puzzle: upPuzzle,
       parent: node,
       g: g,
@@ -179,19 +181,43 @@ export class PuzzleService {
     var successors = [];
     var upNode = this.getUpNode(node);
     if (upNode) {
-      successors.push(upNode)
+      if (node.parent != null) {
+        if (!this.equals(node.parent.puzzle, upNode.puzzle)) successors.push(upNode);
+      }
+      else {
+        successors.push(upNode);
+      }
+      // successors.push(upNode)
     }
     var downNode = this.getDownNode(node);
     if (downNode) {
-      successors.push(downNode)
+      if (node.parent != null) {
+        if (!this.equals(node.parent.puzzle, downNode.puzzle)) successors.push(downNode);
+      }
+      else {
+        successors.push(downNode);
+      }
+      // successors.push(downNode)
     }
     var leftNode = this.getLeftNode(node);
     if (leftNode) {
-      successors.push(leftNode)
+      if (node.parent != null) {
+        if (!this.equals(node.parent.puzzle, leftNode.puzzle)) successors.push(leftNode);
+      }
+      else {
+        successors.push(leftNode);
+      }
+      // successors.push(leftNode)
     }
     var rightNode = this.getRightNode(node);
     if (rightNode) {
-      successors.push(rightNode)
+      if (node.parent != null) {
+        if (!this.equals(node.parent.puzzle, rightNode.puzzle)) successors.push(rightNode);
+      }
+      else {
+        successors.push(rightNode);
+      }
+      // successors.push(rightNode)
     }
     return successors;
   }
@@ -201,6 +227,7 @@ export class PuzzleService {
     for (var i = 1; i < openList.length; ++i) {
       if (minCost > openList[i].cost) {
         minIndex = i;
+        minCost = openList[i].cost;
       }
     }
     return minIndex;
@@ -234,107 +261,112 @@ export class PuzzleService {
     };
   }
 
-  solveByAstar(puzzle) {
+  sumInversions(puzzle) {
+    var inversions = 0;
+    var puzzle_1D = [].concat.apply([], puzzle.elements);
+    for (var i = 0; i < (puzzle.size * puzzle.size) - 1; i++) {
+      for (var j = i + 1; j < (puzzle.size * puzzle.size); j++) {
+        if (puzzle_1D[j] && puzzle_1D[i] && puzzle_1D[i] > puzzle_1D[j])
+          inversions++;
+      }
+    }
+    return inversions;
+  }
 
+  isSolvable(puzzle) {
+    if (puzzle.size % 2 == 1) {
+      return (this.sumInversions(puzzle) % 2 == 0)
+    } else {
+      return ((this.sumInversions(puzzle) + puzzle.size - (puzzle.blankElementIndex.row + 1)) % 2 == 0)
+    }
+  }
+
+  solveByAstar(puzzle) {
     var g = 0, h = this.mahnattanDistance(puzzle), node_start = {
+      title: "Start State",
+      move: "BlankTile (" + puzzle.blankElementIndex.row + "," + puzzle.blankElementIndex.col + ")",
       puzzle: puzzle,
       parent: null,
       g: g,
       h: h,
       cost: g + h
-    }, openList = [], closedList = [];
-    var solution = [];
+    }, result = {iterations: [], timeTaken: null, solvedNode: null}, nodesList = [];
+    var startTime = new Date();
 
-    openList.push(node_start);
+    nodesList.push(node_start);
 
     var step = 1;
-
-    console.log("Start : " + JSON.stringify(node_start));
-
-    while (openList.length > 0) {
-
-      var leastCostNodeIndex = this.getLeastCostNodeIndex(openList), leastCostNode = openList[leastCostNodeIndex];
-      openList.splice(leastCostNodeIndex, 1);
-      // Check if goal state reached
-
-      console.log("Least : " + JSON.stringify(leastCostNode));
-
-      if (this.mahnattanDistance(leastCostNode.puzzle) == 0) {
+    var goalReached = false;
+    while (!goalReached) {
+      var leastCostNodeIndex = this.getLeastCostNodeIndex(nodesList), leastCostNode = nodesList[leastCostNodeIndex];
+      nodesList.splice(leastCostNodeIndex, 1);
+      if (leastCostNode.h == 0) {
+        goalReached = true;
+        result.solvedNode = leastCostNode;
+        result.timeTaken = (+new Date()) - (+startTime);
+        result.iterations.push({
+          title: "Iteration " + (step - 1) + "(GOAL REACHED)",
+          move: "Move (" + leastCostNode.puzzle.blankElementIndex.row + "," + leastCostNode.puzzle.blankElementIndex.col + ")",
+          puzzle: {
+            elements: leastCostNode.puzzle.elements,
+            goalPositions: leastCostNode.puzzle.goalPositions
+          },
+          g: leastCostNode.g,
+          h: leastCostNode.h,
+          cost: leastCostNode.cost,
+          timeTaken: result.timeTaken
+          // successors: successors,
+          // openList: JSON.parse(JSON.stringify(nodesList)),
+          // leastCostNodeIndex: leastCostNodeIndex
+        });
         break;
       }
-      if(step > 35) break;
-
-      // Find successors
-
       var successors = [];
       successors = this.getSuccessors(leastCostNode);
-
-      console.log("Successors : " + JSON.stringify(successors));
       for (var i = 0; i < successors.length; ++i) {
-
-        // Check if it is already on closedList
-
-        var checkedOnClosedList = this.checkOnList(successors[i], closedList);
-        if (checkedOnClosedList.index > -1) {
-          continue;
-        }
-
-        // Check if it is already on openList
-
-        var checkedOnOpenList = this.checkOnList(successors[i], openList);
-        if (checkedOnOpenList.index == -1) {
-
-          openList.push(successors[i])
-
-        }
-        else {
-
-          var oldNode = checkedOnOpenList.oldNode;
-          if (successors[i].g < oldNode.g) {
-            openList.splice(checkedOnOpenList.index, 1);
-            openList.push(successors[i]);
-          }
-
-        }
-
-        console.log("OpenList : " + JSON.stringify(openList));
-
+        nodesList.push(successors[i]);
       }
-      closedList.push(leastCostNode);
-      if(step==1) {
-        solution.push({
+      if (step == 1) {
+        result.iterations.push({
           title: "Start State",
-          move: "BlankTile ("+leastCostNode.puzzle.blankElementIndex.row+","+leastCostNode.puzzle.blankElementIndex.col+")",
+          move: "BlankTile (" + leastCostNode.puzzle.blankElementIndex.row + "," + leastCostNode.puzzle.blankElementIndex.col + ")",
           puzzle: {
-            elements: leastCostNode.puzzle.elements
+            elements: leastCostNode.puzzle.elements,
+            goalPositions: leastCostNode.puzzle.goalPositions
           },
           g: leastCostNode.g,
           h: leastCostNode.h,
-          cost: leastCostNode.cost,
-          successors: successors,
-          openList: JSON.parse(JSON.stringify(openList)),
-          closedList: JSON.parse(JSON.stringify(closedList)),
-          leastCostNodeIndex: leastCostNodeIndex
+          cost: leastCostNode.cost
         });
-      } else {
-        solution.push({
-          title: "Step "+(step-1),
-          move: "Move ("+leastCostNode.puzzle.blankElementIndex.row+","+leastCostNode.puzzle.blankElementIndex.col+")",
+      } else if (step < 5) {
+        result.iterations.push({
+          title: "Iteration " + (step - 1),
+          move: "Move (" + leastCostNode.puzzle.blankElementIndex.row + "," + leastCostNode.puzzle.blankElementIndex.col + ")",
           puzzle: {
-            elements: leastCostNode.puzzle.elements
+            elements: leastCostNode.puzzle.elements,
+            goalPositions: leastCostNode.puzzle.goalPositions
           },
           g: leastCostNode.g,
           h: leastCostNode.h,
-          cost: leastCostNode.cost,
-          successors: successors,
-          openList: JSON.parse(JSON.stringify(openList)),
-          closedList: JSON.parse(JSON.stringify(closedList)),
-          leastCostNodeIndex: leastCostNodeIndex
+          cost: leastCostNode.cost
+        });
+      }
+      else if (step % 100 == 0) {
+        result.iterations.push({
+          title: "Iteration " + (step - 1),
+          move: "Move (" + leastCostNode.puzzle.blankElementIndex.row + "," + leastCostNode.puzzle.blankElementIndex.col + ")",
+          puzzle: {
+            elements: leastCostNode.puzzle.elements,
+            goalPositions: leastCostNode.puzzle.goalPositions
+          },
+          g: leastCostNode.g,
+          h: leastCostNode.h,
+          cost: leastCostNode.cost
         });
       }
       step++;
     }
-  return solution;
+    return result;
   }
 
 }

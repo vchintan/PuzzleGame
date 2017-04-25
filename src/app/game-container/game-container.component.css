@@ -33,11 +33,20 @@
   /*Set our animation play state to paused initially */
   /*animation-play-state: paused;*/
 }
+.tile.hint-tile {
+  color: #f7fffe;
+  background: #009688;
+}
 
 .tile:hover {
   background: #ede0c8;
   box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
   transition: background;
+}
+
+.tile.hint-tile:hover {
+  background: #018478;
+  box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
 }
 
 .tile.blank-tile {
